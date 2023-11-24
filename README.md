@@ -1,64 +1,32 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
 
-## About Laravel
+## AppScreens And Dashboard Screens
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
-
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+![onBoarding_screen](https://github.com/eslamandroid12345/E-learning-Elmazone-/assets/96002614/dc9eb484-8ad3-4aa2-a932-eb687f9a5901)
+![Screen2](https://github.com/eslamandroid12345/E-learning-Elmazone-/assets/96002614/fcabcb08-3ed3-48b6-9c3f-2089d79cf0ed)
+![Screen3](https://github.com/eslamandroid12345/E-learning-Elmazone-/assets/96002614/f03bc353-ec63-4296-8759-946d32413aea)
+![Screen4](https://github.com/eslamandroid12345/E-learning-Elmazone-/assets/96002614/3dd0dacf-a462-4ba5-8ee6-6de03eab2f5f)
+![Screen5](https://github.com/eslamandroid12345/E-learning-Elmazone-/assets/96002614/6bc8083b-24da-4abd-8c84-f1be5a1ac6bc)
+![Screen6](https://github.com/eslamandroid12345/E-learning-Elmazone-/assets/96002614/49e0dded-b80f-42d4-8b38-3409337ae6cb)
+![Screen7](https://github.com/eslamandroid12345/E-learning-Elmazone-/assets/96002614/2cd2b6b4-edcc-4b56-8581-5a906e68b0da)
+![Screen8](https://github.com/eslamandroid12345/E-learning-Elmazone-/assets/96002614/64ec58d0-2476-4d48-bbd6-f84760e76eec)
+![Screen9](https://github.com/eslamandroid12345/E-learning-Elmazone-/assets/96002614/e1e16b60-6d3a-49e2-8539-a99cb5e987d2)
+![Screen10](https://github.com/eslamandroid12345/E-learning-Elmazone-/assets/96002614/defb9603-ddcb-48f4-a3a1-452b8e9c6d14)
+![Screen11](https://github.com/eslamandroid12345/E-learning-Elmazone-/assets/96002614/1a71e620-17b5-4a0a-a1e9-c8378fc87c34)
+![Screen12](https://github.com/eslamandroid12345/E-learning-Elmazone-/assets/96002614/f625a093-ec20-4700-9b37-6cc132760682)
+![Screen13](https://github.com/eslamandroid12345/E-learning-Elmazone-/assets/96002614/104fae30-0795-4cfa-a7c1-a349786d671a)
+![Screen14](https://github.com/eslamandroid12345/E-learning-Elmazone-/assets/96002614/6f0ae450-53ce-478f-980d-8227308a21a4)
+![Screen15](https://github.com/eslamandroid12345/E-learning-Elmazone-/assets/96002614/e149f06b-5e4b-4ce8-a6a6-a97729a1375c)
+![home](https://github.com/eslamandroid12345/E-learning-Elmazone-/assets/96002614/32adbb76-f8e2-4825-9d64-403d30081db5)
+![admins](https://github.com/eslamandroid12345/E-learning-Elmazone-/assets/96002614/071cd043-29c1-4a59-b04e-7c9646addc9f)
+![studnets](https://github.com/eslamandroid12345/E-learning-Elmazone-/assets/96002614/a51e5820-aa4c-4709-9093-a7defc0d53d4)
+![students_part_2](https://github.com/eslamandroid12345/E-learning-Elmazone-/assets/96002614/161e991c-43f3-40d3-b426-c822631f18f4)
+![Classes](https://github.com/eslamandroid12345/E-learning-Elmazone-/assets/96002614/ca6f7f17-a1eb-4b53-a3b7-bfa397b7cbfe)
+![edit_class](https://github.com/eslamandroid12345/E-learning-Elmazone-/assets/96002614/659f5f5f-da16-48da-8283-31214649dd1f)
+![lessons](https://github.com/eslamandroid12345/E-learning-Elmazone-/assets/96002614/3f5ceae3-3647-4a58-b21d-0044e13979d6)
+![roles_and_permissions](https://github.com/eslamandroid12345/E-learning-Elmazone-/assets/96002614/4fba052d-b205-406e-8997-e4d71368b17e)
+![exams_schedules](https://github.com/eslamandroid12345/E-learning-Elmazone-/assets/96002614/35f50125-799b-4dcd-8690-45f45cbf4d16)
+![Sources and reviews](https://github.com/eslamandroid12345/E-learning-Elmazone-/assets/96002614/c63667ba-9f38-42d7-8868-fd63d0e2a8fc)
+![videos](https://github.com/eslamandroid12345/E-learning-Elmazone-/assets/96002614/3f5ce1bf-91ab-48e2-996e-717aaefc0c34)
+![video_actions](https://github.com/eslamandroid12345/E-learning-Elmazone-/assets/96002614/a67acfeb-6c32-4b49-970d-42642925649d)
+![words_for_student](https://github.com/eslamandroid12345/E-learning-Elmazone-/assets/96002614/4ade7786-4336-4824-8898-f76d4c01c493)
