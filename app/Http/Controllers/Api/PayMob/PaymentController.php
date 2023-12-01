@@ -17,9 +17,10 @@ use Illuminate\Http\Request;
 class PaymentController extends Controller{
 
 
-    public function allMonths(){
+    public function allMonths(): JsonResponse
+    {
 
-        $months = array(
+        $months = [
             1 => 'شهر يناير',
             2 => 'شهر فبراير',
             3 =>'شهر مارس',
@@ -32,7 +33,7 @@ class PaymentController extends Controller{
             10 =>'شهر اكتوبر',
             11 => 'شهر نوفمبر',
             12 => 'شهر ديسمبر',
-        );
+        ];
 
 
            $listOfMonths = [];
@@ -49,7 +50,7 @@ class PaymentController extends Controller{
                        ->whereHas('term',fn (Builder $builder) =>
                        $builder
                            ->where('status', '=', 'active')
-                           ->where('season_id', '=', auth('user-api')->user()->season_id))
+                           ->where('season_id', '=',getSeasonIdOfStudent()))
                    ))->where('month','=',$key)
                    ->get();
 
@@ -60,12 +61,11 @@ class PaymentController extends Controller{
                $price = Subscribe::query()
                    ->whereHas('term',fn (Builder $builder) =>
                    $builder->where('status', '=', 'active')
-                       ->where('season_id', '=', auth('user-api')->user()->season_id)
+                       ->where('season_id', '=',getSeasonIdOfStudent())
                    )->where('month','=',$key)
                    ->first();
 
-            ################################ الحصول علي جميع بيانات الشهور بالاسعار الخاصه بالصف الدراسي والتيرم لهذا الطالب ###############################
-
+              ################################ الحصول علي جميع بيانات الشهور بالاسعار الخاصه بالصف الدراسي والتيرم لهذا الطالب ###############################
                $response = [
                    'id' => $key,
                    'name' => $month,
@@ -91,13 +91,13 @@ class PaymentController extends Controller{
     public function checkMoneyPaidWithDiscount(Request $request): JsonResponse
     {
 
-        //جلب جميع اشتراكات الشهور للطالب بالسنه الحاليه
+        ############### جلب جميع اشتراكات الشهور للطالب بالسنه الحاليه ###############
         $userSubscribes = UserSubscribe::query()
             ->where('student_id', auth('user-api')->id())
-            ->where('year', Carbon::now()->format('Y'))
             ->pluck('month')
             ->toArray();
 
+        ########### في حاله لو الطالب بعت كوبون معين ###########
         if (request()->coupon) {
 
             $checkCoupon = DiscountCoupon::query()
@@ -109,13 +109,14 @@ class PaymentController extends Controller{
                 return self::returnResponseDataApi(null, "كود الخصم غير موجود في سجل البيانات", 404, 404);
             }
 
+            ############# لو الطالب استخدم هذا الكوبون من قبل ############
             $countStudentUsedCoupon = DiscountCouponStudent::query()
                 ->where('user_id', auth('user-api')->id())
                 ->where('discount_coupon_id','=', $checkCoupon->id)
                 ->count();
 
 
-            //جمع مبالغ الشهور اللي الطالب بعتها
+            ############### جمع مبالغ الشهور اللي الطالب بعتها #############
             $totalPrice = [];
             foreach ($request->data as $item) {
 
@@ -133,16 +134,15 @@ class PaymentController extends Controller{
                 $totalPrice[] = $item['price'];
             }
 
-
-            //تفقد حاله كود الخصم هل انتهي ام اكتمل عدد مستخدمين هذا الكود
+            ############# تفقد حاله كود الخصم هل انتهي ام اكتمل عدد مستخدمين هذا الكود #########
             $couponStatus = ($checkCoupon->is_enabled == 0 || Carbon::now()->format('Y-m-d') > $checkCoupon->valid_to) ? "unavailable" :
                 (DiscountCouponStudent::query()
-            ->where('discount_coupon_id', $checkCoupon->id)->count() == $checkCoupon->total_usage
+            ->where('discount_coupon_id',$checkCoupon->id)->count() == $checkCoupon->total_usage
                     ? "total_used_completed"
                     : "available");
 
 
-            //تفقد حاله المبلغ المدفوع اذا كان نوع الخصم بال % او مبلغ
+            ################# تفقد حاله المبلغ المدفوع اذا كان نوع الخصم بال % او مبلغ ############
             $totalAfterDiscount = ($couponStatus === "available")
                 ? ($checkCoupon->discount_type == 'per'
                     ? (array_sum($totalPrice) - ((array_sum($totalPrice) * $checkCoupon->discount_amount) / 100))
@@ -152,6 +152,7 @@ class PaymentController extends Controller{
 
             $code = 200;
 
+            ############# ارسال الرد للموبايل في كل حاله - في حاله الاشتراك من قبل - في حاله استخدام هذا الكوبون من قبل - في حاله ارسال جميع مبالغ شهور الاشتراك #####
             if ($countStudentUsedCoupon > 0 && empty($totalPrice)) {
                 $message = "تم تسجيل الاشتراكات في هذه الشهور من قبل وتم استخدام هذا الكوبون من قبل";
                 $code = 415;
@@ -172,12 +173,11 @@ class PaymentController extends Controller{
                 ]);
             }
 
-
-            return self::sendResponseTotalAfterDiscount($totalPrice, $couponStatus,$totalAfterDiscount,$message,$code);
+            return self::sendResponseTotalAfterDiscount($totalPrice,$couponStatus,$totalAfterDiscount,$message,$code);
 
         } else {
 
-            //تفقد المبلغ المدفوع في حاله عدم ادخال اي كود مجاني
+            ########### تفقد المبلغ المدفوع في حاله عدم ادخال اي كود مجاني ##############
             $totalPrice = [];
             foreach ($request->data as $item) {
 
@@ -203,7 +203,6 @@ class PaymentController extends Controller{
                 $message = "تم تسجيل بيانات الاشتراك بنجاح برجاء التوجهه لعمليه الدفع الالكتروني";
             }
 
-
             return self::sendResponseTotalAfterDiscount($totalPrice, "unavailable",0,$message,$code);
         }
 
@@ -217,7 +216,7 @@ class PaymentController extends Controller{
         return response()->json([
             'data' => [
                 'total' => array_sum($total),
-                'coupon_status' =>$status,
+                'coupon_status' => $status,
                 'total_after_discount' => $totalAfterDiscount,
             ],
             'message' => $message,

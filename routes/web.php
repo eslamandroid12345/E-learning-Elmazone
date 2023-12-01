@@ -101,3 +101,37 @@ Route::middleware('auth:admin')->group(function (){
  */
 
 
+/*
+ // Your target time
+$targetTime = Carbon::parse('2023-11-26 15:00:00');
+
+// Current time
+$currentTime = Carbon::now();
+
+// Check if the target time has passed
+if ($currentTime->gt($targetTime)) {
+    // The target time has passed
+    echo 'The time has expired.';
+} else {
+    // The target time is in the future
+    echo 'The time has not expired yet.';
+}
+
+
+
+
+// Your target time
+$targetTime = Carbon::parse('2023-11-26 15:00:00');
+
+// Current time
+$currentTime = Carbon::now();
+
+// Check if the target time is in the future (has not expired)
+if ($targetTime->gt($currentTime)) {
+    // The target time has not yet expired
+    echo 'The time has not expired yet.';
+} else {
+    // The target time has already passed
+    echo 'The time has expired.';
+}
+ */

@@ -62,13 +62,24 @@
                         @endforeach
                     </select>
                 </div>
+
+                <div class="col-md-12">
+                    <label for="country_id" class="form-control-label">اختر المحافظه</label>
+                    <select class="form-control select2" name="city_id">
+                        <option value="" selected disabled>اختار المحافظه</option>
+                        @foreach($cities as $city)
+                            <option value="{{ $city->id}}">{{ $city->name_ar }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
                 <div class="col-md-12">
                     <label for="country_id" class="form-control-label">المدينة</label>
                     <select class="form-control select2" name="country_id">
-                        <option value="" selected disabled>اختار المدينة</option>
-                        @foreach($countries as $country)
-                            <option value="{{ $country->id}}">{{ $country->name_ar }}</option>
-                        @endforeach
+{{--                        <option value="" selected disabled>اختار المدينة</option>--}}
+{{--                        @foreach($countries as $country)--}}
+{{--                            <option value="{{ $country->id}}">{{ $country->name_ar }}</option>--}}
+{{--                        @endforeach--}}
                     </select>
                 </div>
             </div>
@@ -124,4 +135,31 @@
     $(document).ready(function() {
         $('.select2').select2();
     });
+
+
+
+    $(document).ready(function () {
+        $('select[name="city_id"]').on('change', function () {
+            let city_id = $(this).val();
+            if (city_id) {
+                $.ajax({
+                    url: "{{route('getAllCountriesOfCity')}}",
+                    type: "GET",
+                    data: {
+                        "city_id": city_id
+                    },
+                    dataType: "json",
+                    success: function (data) {
+                        $('select[name="country_id"]').empty();
+                        $.each(data, function (key, value) {
+                            $('select[name="country_id"]').append('<option value="' + key + '">' + value + '</option>');
+                        });
+                    },
+                });
+            } else {
+                console.log('AJAX load did not work');
+            }
+        });
+    });
+
 </script>

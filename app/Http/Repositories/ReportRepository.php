@@ -49,7 +49,7 @@ class ReportRepository extends ResponseApi implements ReportRepositoryInterface 
 
             $report = Report::create([
                  'report'            => $request->report,
-                 'user_id'           => Auth::guard('user-api')->id(),
+                 'user_id'           => userId(),
                  'type'              => $request->type,
                  'video_part_id'     => $request->video_part_id ?? null,
                  'video_basic_id'    => $request->video_basic_id ?? null,
@@ -73,7 +73,10 @@ class ReportRepository extends ResponseApi implements ReportRepositoryInterface 
 
     public function allByStudent():JsonResponse{
 
-        $reports = Report::where('user_id','=',Auth::guard('user-api')->id())->get();
+        $reports = Report::query()
+        ->where('user_id','=',Auth::guard('user-api')->id())
+            ->get();
+
         if($reports->count() > 0){
             return self::returnResponseDataApi(ReportApiResource::collection($reports),"تم الحصول علي جميع بلاغات الطالب",200);
 

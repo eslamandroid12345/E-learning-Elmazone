@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Api\Traits\FirebaseNotification;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AllExamRequest;
 use App\Models\AllExam;
@@ -14,7 +15,7 @@ use Yajra\DataTables\Facades\DataTables;
 
 class AllExamController extends Controller
 {
-    use AdminLogs;
+    use FirebaseNotification,AdminLogs;
 
     public function index(request $request)
     {
@@ -76,9 +77,12 @@ class AllExamController extends Controller
             $inputs['answer_video_is_youtube'] = 0;
         }
 
+        $allExamSave = $allExam->create($inputs);
 
-        if($allExam->create($inputs))
-        {
+        if($allExamSave->save()) {
+
+            $this->sendFirebaseNotificationWhenAddedExam(['title' => "اشعار جديد","body" => "تم اضافه امتحان شامل جديد علي المنصه"],$allExamSave->season_id,"full_exam",$allExamSave->id);
+
             $this->adminLog('تم اضافة امتحان شامل');
             return response()->json(['status' => 200]);
         }

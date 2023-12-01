@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Api\Traits\FirebaseNotification;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreVideoBasicRequest;
 use App\Models\CommentReplay;
+use App\Models\Season;
 use App\Models\VideoBasic;
 use App\Models\Report;
 use App\Models\Comment;
+use App\Models\VideoParts;
 use App\Models\VideoResource;
 use App\Traits\AdminLogs;
 use App\Traits\PhotoTrait;
@@ -17,7 +20,7 @@ use Yajra\DataTables\DataTables;
 
 class VideoBasicController extends Controller
 {
-    use PhotoTrait , AdminLogs;
+    use FirebaseNotification,PhotoTrait , AdminLogs;
 
     public function index(request $request)
     {
@@ -277,7 +280,14 @@ class VideoBasicController extends Controller
 
         ]);
 
+        $seasonIds = Season::query()
+            ->select('id','name_ar')
+            ->get();
+
         if($videoBasicCreate->save()){
+            foreach ($seasonIds as $seasonId){
+                $this->sendFirebaseNotificationWhenAddedVideo(['title' => "اشعار جديد","body" => "تم اضافه فيديو اساسيات جديد "],$seasonId->id,"video_basic",$videoBasicCreate->id);
+            }
 
             $this->adminLog('تم اضافة فيديو اساسيات');
             return response()->json(['status' => 200]);

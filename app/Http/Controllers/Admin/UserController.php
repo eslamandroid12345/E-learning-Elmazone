@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\City;
+use App\Models\Payment;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use App\Models\Term;
 use App\Models\User;
 use App\Models\Season;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use App\Models\Country;
@@ -39,7 +42,6 @@ class UserController extends Controller
 
     public function index(request $request)
     {
-
 
         if ($request->ajax()) {
 
@@ -152,7 +154,6 @@ class UserController extends Controller
     public function create()
     {
         $data['seasons'] = Season::get();
-        $data['countries'] = Country::get();
         $data['groupOfMonths'] = array(
             1 => 'January',
             2 => 'February',
@@ -167,6 +168,7 @@ class UserController extends Controller
             11 => 'November',
             12 => 'December',
         );
+        $data['cities'] = City::select('id','name_ar')->get();
         return view('admin.users.parts.create')->with($data);
     }
 
@@ -177,7 +179,7 @@ class UserController extends Controller
         $inputs = $request->all();
         $inputs['user_status'] = 'active';
         $inputs['password'] = Hash::make('123456');
-        $inputs['subscription_months_groups'] = json_encode($request->subscription_months_groups);
+        $inputs['subscription_months_groups'] = json_encode($request->subscription_months_groups) ?? NULL;
 
 
 //        return  $inputs;
@@ -252,6 +254,69 @@ class UserController extends Controller
                 $user->update(['access_token' => null, 'login_status' => 0]);
             }
             $this->adminLog('تم تحديث طالب');
+
+
+            $months  = json_decode($user->subscription_months_groups,true);
+            $subscriptions = Subscribe::query()
+                ->whereHas('term', function (Builder $builder) use ($user){
+                    $builder->where('status', '=', 'active')
+                        ->where('season_id', '=',$user->season_id);
+                })
+                ->where('season_id', '=',$user->season_id);
+
+            if($user->subscription_months_groups != null && $subscriptions->count() > 0){
+
+                if($user->center == 'in'){
+
+                    $allMonths = $subscriptions
+                        ->pluck('month')
+                        ->toArray();
+
+                    $data = $subscriptions
+                        ->pluck('price_in_center','month')
+                        ->toArray();
+                }else{
+                    $allMonths = $subscriptions
+                        ->pluck('month')
+                        ->toArray();
+
+                    $data = $subscriptions
+                        ->pluck('price_out_center','month')
+                        ->toArray();
+                }
+
+                $totalPricePaid = [];
+                foreach ($months as $month){
+                    if(in_array($month,$allMonths)){//1 [1,2,3,4,5]
+                        UserSubscribe::query()
+                            ->updateOrCreate([
+                                'student_id' => $user->id,
+                                'month' => $month
+                            ],[
+                                'student_id' => $user->id,
+                                'month' => $month,
+                                'year' => date('Y'),
+                                'price' => $data[$month < 10 ? str_replace("0","",$month) : $month]
+                            ]);
+
+                        $totalPricePaid[] =  $data[$month < 10 ? str_replace("0","",$month) : $month];
+                    }
+                }
+
+                Payment::query()
+                    ->updateOrCreate([
+                        'user_id' => $user->id,
+                        'payment_type' => 'cash'
+                    ],[
+                        'user_id' => $user->id,
+                        'transaction_status' => 'finished',
+                        'payment_type' => 'cash',
+                        'total_price' => array_sum($totalPricePaid)
+                    ]);
+
+            }
+
+
             return response()->json(['status' => 200]);
         } else {
             return response()->json(['status' => 405]);
@@ -321,9 +386,10 @@ class UserController extends Controller
     }
 
 
-    public function printReport($id)
-    {
+    public function printReport($id){
+
         $user = User::findOrFail($id);
+
         $term = Term::where('season_id', $user->season_id)
             ->where('status', '=', 'active')->first();
         $lessonCount = OpenLesson::where('user_id', $user->id)
@@ -358,7 +424,9 @@ class UserController extends Controller
         $exams = ExamDegreeDepends::where('user_id', '=', $user->id)
             ->where('exam_depends', '=', 'yes')->get();
         $paperExams = PapelSheetExamDegree::where('user_id', '=', $user->id)->get();
-        $subscriptions = UserSubscribe::where('student_id', $user->id)->get();
+        $subscriptions = UserSubscribe::query()
+        ->where('student_id', $user->id)
+            ->get();
         return view('admin.users.parts.report', compact([
             'user',
             'videos',
@@ -477,5 +545,15 @@ class UserController extends Controller
         } else {
             return response()->json(['status' => 500]);
         }
+    }
+
+
+    public function getAllCountriesOfCity(Request $request): array
+    {
+        return Country::query()
+            ->where('city_id', $request->city_id)
+            ->pluck('name_ar', 'id')
+            ->toArray();
+
     }
 }

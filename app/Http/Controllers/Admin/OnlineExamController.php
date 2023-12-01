@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Api\Traits\FirebaseNotification;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OnlineExamRequest;
 use App\Models\ExamDegreeDepends;
@@ -26,7 +27,7 @@ use App\Models\User;
 
 class OnlineExamController extends Controller
 {
-    use AdminLogs;
+    use FirebaseNotification,AdminLogs;
 
     public function index(request $request)
     {
@@ -159,7 +160,8 @@ class OnlineExamController extends Controller
 
     public function selectTerm(Request $request): array
     {
-        return Term::query()->where('season_id', $request->season_id)
+        return Term::query()
+            ->where('season_id', $request->season_id)
             ->pluck('name_ar', 'id')
             ->toArray();
 
@@ -244,7 +246,13 @@ class OnlineExamController extends Controller
             $inputs['answer_video_is_youtube'] = 0;
         }
 
-        if ($online_exam->create($inputs)) {
+        $onlineExamSave = $online_exam->create($inputs);
+
+        if ($onlineExamSave->save()) {
+
+            $exam_type = $online_exam->type == 'class' ? 'subject_class' : $online_exam->type;
+
+            $this->sendFirebaseNotificationWhenAddedExam(['title' => "اشعار جديد","body" => "تم اضافه امتحان جديد بالمنصه "],$onlineExamSave->season_id,$exam_type,$online_exam->id);
             $this->adminLog('تم اضافة امتحان اونلاين');
             return response()->json(['status' => 200]);
         } else {

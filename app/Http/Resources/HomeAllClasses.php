@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Lesson;
+use App\Models\OnlineExam;
 use App\Models\OpenLesson;
 use App\Models\VideoOpened;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -19,12 +21,45 @@ class HomeAllClasses extends JsonResource
     {
 
         return [
-
             'id' => $this->id,
-            'status' => OpenLesson::where('user_id','=',Auth::guard('user-api')->id())
-                ->where('subject_class_id','=',$this->id)->first() ? 'opened' : 'lock',
-            'title' => lang() == 'ar' ? $this->title_ar : $this->title_en,
-            'num_of_lessons' => $this->lessons->count(),
+            'status' => $this->getSubjectClassStatus(),
+            'title' => $this->getTitle(),
+            'num_of_lessons' => $this->getLessonsCount(),
+            'num_of_exams' => $this->getNumOfExams(),
         ];
+
+    }
+
+    private function getSubjectClassStatus(): string
+    {
+        $subjectClass = OpenLesson::query()
+            ->where('user_id', '=',userId())
+            ->where('subject_class_id', '=', $this->id)
+            ->first();
+
+        return $subjectClass ? 'opened' : 'lock';
+    }
+
+    private function getTitle(): string
+    {
+        return lang() == 'ar' ? $this->title_ar : $this->title_en;
+    }
+
+    private function getNumOfExams(): int
+    {
+        // Assuming $numOfExams is calculated somewhere in your code
+        return OnlineExam::query()
+            ->where('class_id','=',$this->id)
+            ->count();
+    }
+
+
+    private function getLessonsCount(): int
+    {
+        // Assuming $numOfExams is calculated somewhere in your code
+        return Lesson::query()
+            ->select('id','subject_class_id')
+            ->where('subject_class_id','=',$this->id)
+            ->count();
     }
 }

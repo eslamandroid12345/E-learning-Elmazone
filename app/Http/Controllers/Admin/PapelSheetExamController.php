@@ -121,7 +121,9 @@ class PapelSheetExamController extends Controller
             }
 
             $this->adminLog('تم اضافة امتحان ورقي');
-            $this->sendFirebaseNotification(['title' => 'اشعار جديد', 'body' => $request->name_ar, 'term_id' => $request->term_id],$request->season_id);
+
+            $this->sendFirebaseNotificationWhenAddedExam(['title' => "اشعار جديد","body" => "تم اضافه امتحان ورقي جديد "],$papelSheetExam->season_id,"papel_sheet_exam",$papelSheetExam->id);
+
             return response()->json(['status' => 200]);
         } else {
             return response()->json(['status' => 405]);

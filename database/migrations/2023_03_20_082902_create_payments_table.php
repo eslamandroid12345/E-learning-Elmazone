@@ -22,6 +22,7 @@ class CreatePaymentsTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->string('transaction_id');
             $table->enum('transaction_status',['pending','failed','finished'])->default('pending');
+            $table->enum('payment_type',['cash','visa'])->default('visa');
             $table->double('total_price');
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->cascadeOnUpdate()->cascadeOnDelete();

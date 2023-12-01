@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Api\Traits\FirebaseNotification;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreVideoResource;
 use App\Http\Requests\UpdateVideoResource;
@@ -20,9 +21,8 @@ use Yajra\DataTables\DataTables;
 
 class VideoResourceController extends Controller
 {
-    use PhotoTrait , AdminLogs;
+    use FirebaseNotification,PhotoTrait , AdminLogs;
 
-    // Index Start
     public function index(request $request)
     {
         $video_resource_list = VideoResource::select('*');
@@ -295,7 +295,7 @@ class VideoResourceController extends Controller
         ]);
 
         if($videoResourceCreate->save()){
-
+            $this->sendFirebaseNotificationWhenAddedVideo(['title' => "اشعار جديد","body" => "تم اضافه فيديو مراجعه جديد "],$videoResourceCreate->season_id,"video_resource",$videoResourceCreate->id);
             $this->adminLog('تم اضافة فيديو');
             return response()->json(['status' => 200]);
 

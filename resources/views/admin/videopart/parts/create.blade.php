@@ -23,7 +23,7 @@
                     <label for="name_ar" class="form-control-label">الصف الدراسي</label>
                     <Select name="season_id" id="season_id" class="form-control">
                         <option disabled selected>اختر</option>
-                    
+
                         @foreach ($seasons as $season)
                             <option value="{{ $season->id }}" style="text-align: center">{{ $season->name_ar }}</option>
                         @endforeach
@@ -65,7 +65,7 @@
                 <div class="col-md-12 mt-3">
                     <label for="head">شهر</label>
                     <select name="month" class="form-control" id="signup_birth_month" >
-                        <option value="" style="text-align: center">اختر شهر</option>
+                        <option value="">اختر شهر</option>
                         <?php for ($i = 1; $i <= 12; $i++){
                             echo '<option style="text-align: center" value="' . $i . '">' . date( 'F', strtotime( "$i/12/10" ) ) . '</option>';
                         }?>
@@ -158,7 +158,6 @@
 
             let season_id = $("#season_id").val();
             let term_id = $("#term_id").val();
-
 
             if (term_id) {
                 $.ajax({

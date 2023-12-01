@@ -141,6 +141,4 @@ class AuthController extends Controller
         return $this->authRepositoryInterface->notificationUpdateStatus($id);
     }
 
-
-
 }//end of class Auth

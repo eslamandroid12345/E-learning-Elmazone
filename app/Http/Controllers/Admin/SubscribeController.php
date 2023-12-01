@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\RequestSubscribe;
 use App\Models\Season;
 use App\Traits\AdminLogs;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Models\Subscribe;
@@ -14,7 +15,6 @@ use App\Models\Term;
 class SubscribeController extends Controller
 {
     use AdminLogs;
-    // Index START
     public function index(request $request)
     {
         if ($request->ajax()) {
@@ -30,10 +30,10 @@ class SubscribeController extends Controller
                        ';
                 })
                 ->editColumn('term_id', function ($subscribes) {
-                    return '<td>'. $subscribes->term->name_ar .'</td>';
+                    return  $subscribes->term->name_ar;
                 })
                 ->editColumn('season_id', function ($subscribes) {
-                    return '<td>'. $subscribes->season->name_ar .'</td>';
+                    return $subscribes->season->name_ar;
                 })
                 ->editColumn('free', function ($subscribes) {
                     if($subscribes->free == 'yes')
@@ -42,13 +42,13 @@ class SubscribeController extends Controller
                     return '<td>لا</td>';
                 })
                 ->editColumn('price_in_center', function ($subscribes) {
-                    return '<td><button class="btn btn-success">'. $subscribes->price_in_center .' EGB</button></td>';
+                    return $subscribes->price_in_center;
                 })
                 ->editColumn('price_out_center', function ($subscribes) {
-                    return '<td><button class="btn btn-secondary">'. $subscribes->price_out_center .' EGB</button></td>';
+                    return $subscribes->price_out_center;
                 })
                 ->editColumn('month', function ($subscribes) {
-                    return '<td><button class="btn btn-primary">'. date('F', mktime(0, 0, 0, $subscribes->month, 10)) .'</button></td>';
+                    return $subscribes->month;
                 })
                 ->escapeColumns([])
                 ->make(true);
@@ -57,22 +57,15 @@ class SubscribeController extends Controller
         }
     }
 
-    // End Index
-
-    // Create START
 
     public function create()
     {
-        $data['terms'] = Term::all();
-        $data['seasons'] = Season::all();
-        return view('admin.subscribes.parts.create', compact('data'));
+        $seasons = Season::all();
+        return view('admin.subscribes.parts.create', compact('seasons'));
     }
 
-    // Create END
 
-    // Store START
-
-    public function store(RequestSubscribe $request)
+    public function store(RequestSubscribe $request): JsonResponse
     {
         $inputs = $request->all();
 
@@ -93,22 +86,15 @@ class SubscribeController extends Controller
         }
     }
 
-    // Store END
-
-    // Edit Start
 
     public function edit(Subscribe $subscribe)
     {
-        $data['seasons'] = Season::get();
-        $data['terms'] = Term::get();
-        return view('admin.subscribes.parts.edit', compact('data', 'subscribe'));
+        $seasons = Season::get();
+        $terms = Term::get();
+        return view('admin.subscribes.parts.edit', compact('seasons','terms', 'subscribe'));
     }
 
-    // Edit End
-
-    // Update Start
-
-    public function update(Subscribe $subscribe, RequestSubscribe $request)
+    public function update(Subscribe $subscribe, RequestSubscribe $request): JsonResponse
     {
         $inputs = $request->all();
 
@@ -129,11 +115,9 @@ class SubscribeController extends Controller
         }
     }
 
-    // Update End
 
-    // Destroy Start
 
-    public function destroy(Request $request)
+    public function destroy(Request $request): JsonResponse
     {
         $subject_class = Subscribe::where('id', $request->id)->firstOrFail();
         $subject_class->delete();
@@ -141,5 +125,5 @@ class SubscribeController extends Controller
         return response()->json(['message' => 'تم الحذف بنجاح', 'status' => 200], 200);
     }
 
-    // Destroy End
+
 }

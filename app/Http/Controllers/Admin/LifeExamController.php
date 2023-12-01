@@ -70,11 +70,13 @@ class LifeExamController extends Controller
             $inputs['answer_video_file'] = $this->saveImage($request->answer_video_file, 'answer_video_file', 'photo');
         }
 
+        $liveExamSave = LifeExam::create($inputs);
 
-        if (LifeExam::create($inputs)) {
+        if ($liveExamSave->save()) {
 
             $this->adminLog('تم اضافة امتحان لايف');
-            $this->sendFirebaseNotification(['title' => 'اشعار جديد', 'body' => $request->name_ar, 'term_id' => $request->term_id], $request->season_id);
+
+            $this->sendFirebaseNotificationWhenAddedExam(['title' => "اشعار جديد","body" => $liveExamSave->date_exam." عندك امتحان لايف يا بطل بتاريخ  "],$liveExamSave->season_id,"life_exam",$liveExamSave->id);
 
             return response()->json(['status' => 200]);
         } else {

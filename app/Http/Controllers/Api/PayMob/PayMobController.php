@@ -13,6 +13,7 @@ use App\Http\Controllers\Controller;
 class PayMobController extends Controller
 {
 
+    ##################### تسجيل عمليه الدفع الالكتروني #########
     public static function pay(float $total_price, int $order_id)
     {
 
@@ -54,10 +55,9 @@ class PayMobController extends Controller
 
     }
 
-    ###################### Update Transaction When Payment Success #########################
+    ################## الرد في حاله نجاح عمليه الدفع الالكتروني او فشل عمليه الدفع #########
     public function checkout_processed(Request $request)
     {
-
 
         $request_hmac = $request->hmac;
         $calc_hmac = PayMob::calcHMAC($request);
@@ -76,7 +76,6 @@ class PayMobController extends Controller
                     'transaction_status' => 'finished',
                     'transaction_id' => $transaction_id
                 ]);
-
 
                 $userSubscribes = UserSubscribe::query()
                     ->where('student_id', '=', $order->user_id)
@@ -104,11 +103,9 @@ class PayMobController extends Controller
         }
     }
 
-    ############################# Check Response After Payment (Success,Failed) ########################################
-
+    ############################# التوجهه بعد عمليه الدفع الالكتروني ################
     public function responseStatus(Request $request): RedirectResponse
     {
-
         return redirect()->to('api/checkout?status=' . $request['success'] . '&id=' . $request['id']);
     }
 

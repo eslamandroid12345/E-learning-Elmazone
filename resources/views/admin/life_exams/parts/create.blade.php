@@ -28,6 +28,7 @@
                     <input type="time"  class="form-control" name="time_end">
                 </div>
             </div>
+
             <div class="row">
                 <div class="col-md-12 mt-3">
                     <label for="note" class="form-control-label">الصف الدراسي</label>

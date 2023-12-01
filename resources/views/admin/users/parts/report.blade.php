@@ -33,18 +33,16 @@
                                             <th style="width: 70px;">#</th>
                                             <th>الشهر</th>
                                             <th class="text-end">المبلغ</th>
-                                            <th class="text-end">تاريخ الدفع</th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         @foreach($subscriptions as $subscription)
                                             <tr>
-                                                <td>{{ $loop->iteration }}</td>
+                                                <td>{{ $subscription->id }}</td>
                                                 <td>{{ $subscription->month }}</td>
                                                 <td class="text-end">{{ $subscription->price }}</td>
-                                                <td>{{ $subscription->created_at->format('Y-m-d') }}</td>
                                             </tr>
-                                        @endforeach
+                                         @endforeach
                                         </tbody>
                                     </table>
                                 </div>

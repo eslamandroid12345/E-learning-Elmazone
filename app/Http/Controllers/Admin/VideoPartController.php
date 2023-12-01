@@ -18,6 +18,7 @@ use App\Models\Report;
 use App\Models\VideoTotalView;
 use App\Traits\AdminLogs;
 use App\Traits\PhotoTrait;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -268,8 +269,15 @@ class VideoPartController extends Controller
 
         ]);
 
+        $subjectClass = VideoParts::query()
+            ->where('id',$videoPartCreate->id)
+            ->with(['lesson.subject_class'])
+            ->first();
+
         if($videoPartCreate->save()){
 
+            //($data,$season_id,$exam_type,$exam_id)
+            $this->sendFirebaseNotificationWhenAddedVideo(['title' => "اشعار جديد","body" => "تم اضافه فيديو شرح جديد "],$subjectClass->lesson->subject_class->season_id,"video_part",$videoPartCreate->id);
             $this->adminLog('تم اضافة فيديو');
             return response()->json(['status' => 200]);
 
@@ -282,8 +290,19 @@ class VideoPartController extends Controller
 
     public function edit(VideoParts $videosPart)
     {
-        $lessons = Lesson::get();
-        return view('admin.videopart.parts.edit', compact('videosPart', 'lessons'));
+
+        $seasons = DB::table('seasons')
+        ->select('id','name_ar')
+        ->get();
+
+        $terms = DB::table('terms')
+            ->select('id','name_ar')
+            ->get();
+
+
+        $lesson = Lesson::with(['subject_class'])->find($videosPart->lesson_id);
+
+        return view('admin.videopart.parts.edit', compact('videosPart','terms','seasons','lesson'));
     }
 
 
@@ -330,6 +349,7 @@ class VideoPartController extends Controller
             'youtube_link' => $request->youtube_link ?? null,
             'is_youtube' => $request->youtube_link != null ? 1 : 0,
             'video_time' => $request->video_time,
+            'lesson_id' => $request->lesson_id,
         ]);
 
         if($videPartUpdate->save()){

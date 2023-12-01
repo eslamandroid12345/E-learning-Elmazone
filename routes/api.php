@@ -20,7 +20,6 @@ use App\Http\Controllers\Api\LiveExam\LiveExamController;
 use App\Http\Controllers\Api\MonthlyPlan\MonthlyPlanController;
 use App\Http\Controllers\Api\Notes\NoteController;
 use App\Http\Controllers\Api\OnBoardingController;
-use App\Http\Controllers\Api\Payment;
 use App\Http\Controllers\Api\PayMob\CheckoutController;
 use App\Http\Controllers\Api\PayMob\PaymentController;
 use App\Http\Controllers\Api\PayMob\PayMobController;
@@ -76,10 +75,6 @@ Route::group(['middleware' => 'lang'], function (){
         Route::get('invite-your-friends',[AuthController::class,'inviteYourFriends']);
         Route::get('exam-countdown',[AuthController::class,'examCountdown']);
 
-
-//        Route::post('/payments/pay',[Payment::class,'pay']);
-//        Route::post('/payments/go_pay',[Payment::class,'go_pay']);
-//        Route::post('/payments/paymob____',[Payment::class,'pay_']);
     });
   });
 
@@ -95,21 +90,15 @@ Route::group(['middleware' => 'lang'], function (){
 
     Route::group(['prefix' => 'lesson','middleware' => ['jwt']], function (){
         Route::get('videos/{id}',[LessonController::class,'allVideos']);
-
-        //video details
         Route::get('video/details/{id}',[LessonController::class,'videoDetails']);
         Route::get('video/comments/{id}',[LessonController::class,'videoComments']);
         Route::post('video/add-comment',[CommentController::class,'videoAddComment']);
         Route::post('comment/add-replay/{id}',[CommentController::class,'commentAddReplay']);
-
-
-        //access videos
         Route::post('{id?}',[LessonController::class,'accessFirstVideo']);
 
     });
 
         Route::post('video-update-time/{id}',[LessonController::class,'updateMinuteVideo'])->middleware('jwt');
-
         Route::group(['prefix' => 'plans','middleware' => ['jwt']], function (){
             Route::get('all',[MonthlyPlanController::class,'all_plans']);
 
@@ -122,7 +111,6 @@ Route::group(['middleware' => 'lang'], function (){
         });
 
         Route::group(['prefix' => 'video','middleware' => 'jwt'], function (){
-            //update and delete comment and replay
             Route::post('comment/update/{id}',[CommentController::class,'updateComment']);
             Route::delete('comment/delete/{id}',[CommentController::class,'deleteComment']);
             Route::post('replay/update/{id}',[CommentController::class,'updateReplay']);
@@ -133,8 +121,6 @@ Route::group(['middleware' => 'lang'], function (){
             Route::get('all-of-questions/{id}',[ExamEntryController::class,'all_questions_by_online_exam']);
         });
 
-
-        //start Exam entry controller
         Route::group(['prefix' => 'ExamEntry','middleware' => ['jwt']], function (){
             Route::post('exam/{id}',[ExamEntryController::class,'online_exam_by_user']);
              Route::get('exam-degree-depends-with-student/{id}',[ExamEntryController::class,'degreesDependsWithStudent']);
@@ -143,13 +129,10 @@ Route::group(['middleware' => 'lang'], function (){
 
         Route::group(['prefix' => 'degrees','middleware' => ['jwt']], function (){
             Route::get('all-exams-degrees',[DegreeController::class,'degrees']);
-    //        Route::get('depends/exam/{id}',[DegreeController::class,'degrees_depends']);
-
             });
 
         Route::get('ads',[AdsController::class,'index'])->middleware('jwt');
         Route::get('on-boarding',[OnBoardingController::class,'index']);
-        //exam details
 
         Route::middleware('jwt')->group(function (){
             Route::get('exam-degree/details',[AllExamsUsersDegreeController::class,'all_exams_details']);
@@ -193,8 +176,6 @@ Route::group(['middleware' => 'lang'], function (){
 
     Route::get('instruction/exam/{id}',[InstructionController::class,'instructionExamDetails']);
 
-
-    //start lesson details
     Route::group(['prefix' => 'lesson','middleware' => 'jwt'], function (){
         Route::get('all-video-by-lessonId/{id}',[LessonDetailsController::class,'allVideoByLessonId']);
         Route::get('all-pdf-by-videoId/{id}',[LessonDetailsController::class,'allPdfByVideoId']);
@@ -204,8 +185,6 @@ Route::group(['middleware' => 'lang'], function (){
         Route::get('exam-details-by-examId/{id}',[LessonDetailsController::class,'examDetailsByExamId']);
     });
 
-
-    //start exams degree details
     Route::group(['prefix' => 'degree-details','middleware' => 'jwt'], function (){
         Route::get('all-exams',[DegreeExamsDetailsController::class,'allExamsDegreeDetails']);
         Route::get('class/{id}',[DegreeExamsDetailsController::class,'classDegreeDetails']);
@@ -214,8 +193,6 @@ Route::group(['middleware' => 'lang'], function (){
 
     });
 
-
-    //start note add and note details
     Route::group(['prefix' => 'notes','middleware' => 'jwt'], function (){
         Route::post('note-add-by-student',[NoteController::class,'noteAddByStudent']);
         Route::get('note-all-by-date',[NoteController::class,'noteAllByDate']);
@@ -224,7 +201,6 @@ Route::group(['middleware' => 'lang'], function (){
 
     });
 
-    //start test-yourself-exams
     Route::group(['prefix' => 'test-yourself-exams','middleware' => 'jwt'], function (){
         Route::post('make-exam',[TestYourselfExamsController::class,'makeExam']);
         Route::get('exam-questions/{id}',[TestYourselfExamsController::class,'examQuestions']);
@@ -233,8 +209,6 @@ Route::group(['middleware' => 'lang'], function (){
 
     });
 
-
-    //start live exam
     Route::group(['prefix' => 'live-exam','middleware' => 'jwt'], function (){
         Route::get('all-of-questions/{id}',[LiveExamController::class,'allOfQuestions']);
         Route::post('add-exam-by-student/{id}',[LiveExamController::class,'addLiveExamByStudent']);
@@ -248,11 +222,6 @@ Route::group(['middleware' => 'lang'], function (){
         Route::get('exam-heroes/all',[ExamEntryController::class,'examHeroesAll']);
     });
 
-
-
-    /*
-     * Content of months and check money paid with coupon to discount
-     */
     Route::group(['prefix' => 'payments','middleware' => 'jwt'], function (){
 
         Route::get('all-months',[PaymentController::class,'allMonths']);
@@ -261,9 +230,6 @@ Route::group(['middleware' => 'lang'], function (){
 
     });
 
-    /*
-     * PayMob integration
-     */
     Route::post('processed',[CheckoutController::class,'index'])->middleware('jwt');
     Route::post('checkout/processed',[PayMobController::class,'checkout_processed']);
     Route::get('checkout/response',[PayMobController::class,'responseStatus']);
